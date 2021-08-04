@@ -1,0 +1,43 @@
+TC PARAMS :
+branchname 
+db_instance  pp
+workspace %system.teamcity.build.checkoutdir%   ( hidden textbox) 
+
+
+vcs roots :
+devops.git 
++:. => devops
+
+myprojects.git
++:conf
+
+
+pass params to script 
+
+%db_instance% %workspace%
+------
+
+$env =$args[0]
+$workspace = $args[1]
+
+Write-Host "env --> $env"
+
+config_workspace=$($workspace)\conf
+devops=$($workspace)\devops
+
+$psscript1= "$($devops_workspace)\build_functions.ps1
+.$psscript1
+$instance=GetDBInstance -Environment $environment -config_workspace  $config_workspace
+$dbname="master"
+
+try{
+$sproc_call="[ttgsys].[DBAuto].[proc] @ Applicaton ='DR' ,@System_property='', @System_property_value='$process_date'"
+ExecuteNonQuery -Instance $instance -dbname $dbname -query $sproc_call -Verbose -ErrorAction Stop
+
+}
+
+catch {
+
+}
+
+}
