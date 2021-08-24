@@ -1,0 +1,1 @@
+user -> settings -> developer settings --> personal access tokens -> generte new token 
